@@ -1,80 +1,81 @@
-# Job Portal Backend (Spring Boot, JWT, MySQL)
+# Job Portal Backend
 
-Production-style REST API for a job portal system, built with layered architecture and secure authentication.
+This is a Spring Boot backend for a simple job portal system. I built it to practice the usual pieces of a backend project: REST APIs, validation, database access, authentication, and clean error handling.
 
-## Why this project
-- Demonstrates backend engineering fundamentals expected in fresher Java roles.
-- Uses clean separation of concerns: controller, service, repository, DTO, exception handler.
-- Implements security, validation, standardized responses, and API documentation.
+## What this project does
+- Lets a user register and log in.
+- Stores passwords using BCrypt instead of plain text.
+- Exposes CRUD APIs for jobs.
+- Returns responses in a consistent format.
+- Handles common errors in one place.
+- Includes Swagger UI so the APIs are easy to test.
 
-## Core features
-- JWT-based authentication (`/auth/register`, `/auth/login`).
-- BCrypt password hashing before persistence.
-- Full Job CRUD APIs (`GET`, `POST`, `PUT`, `DELETE`).
-- Request validation with `jakarta.validation`.
-- Global exception handling with consistent error response format.
-- Swagger/OpenAPI integration for API exploration.
+## Project structure
 
-## Architecture
-`Controller -> Service -> Repository -> Database`
+The code follows a basic layered setup:
 
-- `controller`: HTTP request/response orchestration only.
-- `service`: business logic and use-case execution.
-- `repository`: JPA data access.
-- `dto`: request and response contracts.
-- `exception`: centralized exception mapping via `@RestControllerAdvice`.
-- `security`: JWT utility and Spring Security configuration.
+- `controller` handles incoming HTTP requests.
+- `service` contains the main business logic.
+- `repository` talks to the database using Spring Data JPA.
+- `dto` keeps request and response objects separate from entities.
+- `exception` contains custom exceptions and the global exception handler.
+- `security` contains the JWT helper and Spring Security configuration.
+- `model` contains the JPA entities.
+- `mapper` converts between entities and DTOs.
 
 ## Tech stack
-- Java 17+
-- Spring Boot 3
-- Spring Web, Spring Data JPA, Spring Security
+
+- Java 17
+- Spring Boot 3.2
+- Spring Web
+- Spring Data JPA
+- Spring Security
+- Validation (`jakarta.validation`)
 - MySQL
 - JWT (`jjwt`)
 - Swagger/OpenAPI (`springdoc`)
 - Maven
 
-## Local setup
-1. Create MySQL database: `jobportal`.
-2. Update credentials in `src/main/resources/application.properties` if needed.
-3. Start the application.
+## Main features
+
+- `POST /auth/register` for new user registration.
+- `POST /auth/login` for login and JWT token generation.
+- `GET /jobs` to list all jobs.
+- `GET /jobs/{id}` to get a single job by id.
+- `POST /jobs` to create a job.
+- `PUT /jobs/{id}` to update a job.
+- `DELETE /jobs/{id}` to delete a job.
+
+## Configuration
+
+The important settings are in `src/main/resources/application.properties`.
+
+## How to run the project
+
+1. Create a MySQL database named `jobportal`.
+2. Update `application.properties` if your local MySQL username or password is different.
+3. Run the application from the project root.
 
 ```powershell
-Set-Location "C:\Users\sandh\Downloads\job-portal-full"
+Set-Location "C:\Springboot Projects\job-portal"
 mvn spring-boot:run
 ```
 
-4. Open Swagger UI:
-`http://localhost:8080/swagger-ui/index.html`
+4. Open Swagger UI in the browser:
+http://localhost:8080/swagger-ui/index.html
 
-## Configuration
-File: `src/main/resources/application.properties`
 
-- `spring.datasource.url=jdbc:mysql://localhost:3306/jobportal`
-- `spring.datasource.username=root`
-- `spring.datasource.password=root`
-- `jwt.secret=...`
-- `jwt.expiration-ms=3600000`
+## Response format
 
-Note: for real deployments, move DB password and JWT secret to environment variables.
+Success responses follow a simple wrapper:
 
-## API summary
-- `POST /auth/register`
-- `POST /auth/login`
-- `GET /jobs`
-- `GET /jobs/{id}`
-- `POST /jobs`
-- `PUT /jobs/{id}`
-- `DELETE /jobs/{id}`
+```json
+{
+  "success": true,
+  "message": "...",
+  "data": {}
+}
+```
 
-## Response contract
-- Success: `{ "success": true, "message": "...", "data": ... }`
-- Error: `{ "timestamp": "...", "status": 400, "error": "Bad Request", "message": "...", "path": "...", "validationErrors": { ... } }`
-
-## Resume snapshot
-- Built a layered Spring Boot backend with JWT auth, BCrypt password hashing, and MySQL persistence.
-- Implemented DTO-based request/response contracts, validation, and centralized exception handling.
-- Delivered fully documented REST APIs using Swagger and standardized API response envelopes.
-
-For copy-paste resume bullets and project title variants, see `RESUME-ASSETS.md`.
+Author - Sandhya Rani
 
